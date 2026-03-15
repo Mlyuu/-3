@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Level วันสุดท้ายเเล้วสู้ๆนะ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); 
+            text-align: center;
+            padding-top: 8vh;
+            margin: 0;
+            color: #333;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+        h1 {
+            color: #6c5ce7;
+            font-size: 26px;
+            font-weight: 700;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .highlight {
+            color: #fd79a8;
+            font-weight: bold;
+        }
+        .btn {
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Kanit', sans-serif;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #a29bfe;
+            transform: scale(1.05);
+        }
+        
+        #loading-area {
+            display: none;
+            margin-top: 30px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f1f2f6;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 20px;
+            margin-bottom: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #00b894;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        #loading-text {
+            font-size: 16px;
+            color: #636e72;
+            font-style: italic;
+        }
+
+        #result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff200;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2d3436;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1> A Level วันสุดท้ายแล้วเย้ </h1>
+        <p>
+            อ่านหนังสือมาตั้งกี่วัน ทำโจทย์มาตั้งกี่ข้อ<br>
+            วันนี้คือวันสอบวันสุดท้ายแล้วนะ<br><br>
+            ขอให้ความรู้ที่สะสมมาทั้งหมด ได้ใช้ในการสอบวันสุดท้ายนะ<span class="highlight">ขอให้ได้คะแนนเยอะๆตามที่หวังไว้นะ</span><br>
+            ตอบข้อไหนก็ขอให้ถูก ไม่เครียดในการสอบ เธอเก่งอยู่แล้วไม่เห้นต้องไปคิดเรื่องเครียดเลยโฟกัสแค่สิ่งที่อยู่ตรงหน้าก็พอนะ เพื่อมหาลัยที่เธออยากเข้าขอให้เข้าให้ได้นะ
+        </p>
+        
+        <button class="btn" id="start-btn" onclick="startPrediction()">กดเพื่อเอากำลังใจ</button>
+
+        <div id="loading-area">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="loading-text">กำลังคิดอยู่ว่าให้ดีมั้ย</div>
+        </div>
+
+        <div id="result-box"></div>
+        
+        <button class="btn" id="restart-btn" style="display: none; margin-top: 20px;" onclick="startPrediction()">ขอกำลังใจอีกรอบ</button>
+    </div>
+
+    <script>
+        function startPrediction() {
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('restart-btn').style.display = 'none';
+            document.getElementById('result-box').style.display = 'none';
+
+            document.getElementById('loading-area').style.display = 'block';
+
+            let progress = 0;
+            let fill = document.getElementById('progress-fill');
+            let text = document.getElementById('loading-text');
+
+            fill.style.width = '0%';
+
+            const steps = [
+                "กำลังคิดอยู่ว่าให้ดีมั้ย...",
+                "ให้กำลังใจดีกว่า...",
+                "กำลังคิดให้ ซักครู่...",
+                "คิดออกและ..."
+            ];
+
+            text.innerText = steps[0];
+
+            let interval = setInterval(() => {
+                progress += 2;
+                fill.style.width = progress + '%';
+
+                if (progress === 25) text.innerText = steps[1];
+                if (progress === 50) text.innerText = steps[2];
+                if (progress === 75) text.innerText = steps[3];
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    showResult();
+                }
+            }, 60);
+        }
+
+        function showResult() {
+            document.getElementById('loading-area').style.display = 'none';
+            
+            let resultBox = document.getElementById('result-box');
+            resultBox.style.display = 'block';
+            
+            const finalBlessings = [
+                "ขอให้วันนี้เป็นวันที่ดีของเธอครับ ทำข้อสอบได้อย่างมั่นใจนะ",
+                "ทำให้เต็มที่เลยนะครับวันนี้ เดี๋ยวสอบเสร็จไปฉลองกัน",
+                "เค้าภูมิใจในตัวเธอมากๆเลยนะที่ผานมาจนถึงวันนี้",
+                "ขอให้ทุกข้อที่อ่านมาออกหมดเลยนะ ตั้งใจทำให้เต็มที่นะครับ สู้ๆไออ้วม",
+                "เหนื่อยมาหลายวันแล้ว วันนี้สู้ให้สุดไปเลย เธอก็ต้องผ่านอยู่แล้วพยายามตั้งขนาดนี้",
+                "วันนี้วันสุดท้ายแล้ว สู้ๆนะเดี๋ยวก็จบแล้วเค้าอยู่ข้างๆเธอเสมอนะ เป็นกำลังใจให้ตลอด",
+                "พ่อเมืองเอ๋ย หากท่านละทิ้งคะแนน ณ บัดนี้ แล้วใครเล่าจะปกป้องแผ่นดิน ใครจะปกป้องไพร่ฟ้าประชาชนของเรา"
+            ];
+            
+            let randomBlessing = finalBlessings[Math.floor(Math.random() * finalBlessings.length)];
+            resultBox.innerText = randomBlessing;
+            document.getElementById('restart-btn').style.display = 'inline-block';
+        }
+    </script>
+
+</body>
+</html>
